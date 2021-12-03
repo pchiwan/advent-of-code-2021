@@ -1,0 +1,13 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "description": "Advent of Code 2021 exercises",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Sílvia Mur <pchiwan@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
