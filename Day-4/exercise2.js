@@ -4,6 +4,7 @@ import { readFile } from "../helpers";
 
 const BOARD_LINES = 5;
 const BOARD_COLUMNS = 5;
+const CHECKED = "X";
 
 function getBingoBoards(input) {
   const bingoBoards = [];
@@ -11,14 +12,10 @@ function getBingoBoards(input) {
   for (let i = 0; i < input.length; i = i + 6) {
     const board = [];
     for (let j = 0; j < BOARD_LINES; j++) {
-      const line = [];
-      const fileLine = input[i + j].split(" ").filter(Boolean);
-      for (let k = 0; k < BOARD_COLUMNS; k++) {
-        line.push({
-          val: parseInt(fileLine[k], 10),
-          marked: false,
-        });
-      }
+      const line = input[i + j]
+        .split(" ")
+        .filter(Boolean)
+        .map((x) => parseInt(x, 10));
       board.push(line);
     }
     bingoBoards.push(board);
@@ -30,11 +27,13 @@ function getBingoBoards(input) {
 function checkBoard(board, number) {
   for (let i = 0; i < board.length; i++) {
     let lineWins = 0;
+
+    // check current number while checking lines
     for (let j = 0; j < BOARD_COLUMNS; j++) {
-      if (board[i][j].val === number) {
-        board[i][j].marked = true;
+      if (board[i][j] === number) {
+        board[i][j] = CHECKED;
       }
-      if (board[i][j].marked) {
+      if (board[i][j] === CHECKED) {
         lineWins++;
       }
     }
@@ -44,10 +43,11 @@ function checkBoard(board, number) {
     }
   }
 
+  // check columns
   for (let i = 0; i < BOARD_COLUMNS; i++) {
     let columnWins = 0;
     for (let j = 0; j < board.length; j++) {
-      if (board[j][i].marked) {
+      if (board[j][i] === CHECKED) {
         columnWins++;
       }
     }
@@ -63,8 +63,8 @@ function calculateScore(board, lastNumber) {
   let sum = 0;
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < BOARD_COLUMNS; j++) {
-      if (!board[i][j].marked) {
-        sum += board[i][j].val;
+      if (board[i][j] !== CHECKED) {
+        sum += board[i][j];
       }
     }
   }
@@ -87,7 +87,6 @@ function main(input) {
 
   while (index < bingoNumbers.length) {
     const ball = bingoNumbers[index];
-    console.log(`${ball}!`);
 
     let i = 0;
     while (i < bingoBoards.length) {
